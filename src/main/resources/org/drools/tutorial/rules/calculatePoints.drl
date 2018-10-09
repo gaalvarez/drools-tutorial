@@ -1,0 +1,55 @@
+//created on: 7/10/2018
+package org.drools.tutorial.rules
+
+//list any import classes here.
+import org.drools.tutorial.model.Item;
+import org.drools.tutorial.model.Order;
+import java.math.BigDecimal;
+
+//declare any global variables here
+global java.util.List points;
+
+declare Subtotal
+  value : BigDecimal
+end
+
+declare Order
+  value : BigDecimal
+end
+
+rule "sum order"
+    //include attributes such as "salience" here...
+    when
+        $total: Double() from 
+        	accumulate(Item($price: price, $amout: amount ), sum($price.multiply(new BigDecimal($amout))))
+    then
+		System.out.println("precio total de la compra: " + $total);
+		insert(new Order(new BigDecimal($total)));
+end
+
+
+
+rule "points by amount"
+    //include attributes such as "salience" here...
+    when
+        Item($amount: amount >= 20L)
+    then
+		System.out.println("puntos por cantidad: " + 5L*($amount/20L));
+		points.add(5L*($amount/20L));
+end
+
+rule "points by price order"
+    when
+        Order( $div: value.divide(new BigDecimal("10000")) )
+    then
+		System.out.println("puntos por precio: " + $div.longValue());
+        points.add($div.longValue());
+end
+
+rule "points by price item"
+    when
+        Item( price >= 500000L, $amount: amount )
+    then
+		System.out.println("puntos por precio item: " + 10L*$amount);
+		points.add(10L*$amount);
+end
