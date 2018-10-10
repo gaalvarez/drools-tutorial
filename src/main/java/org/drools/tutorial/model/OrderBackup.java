@@ -9,9 +9,9 @@ import java.math.BigDecimal;
  * @author a2g
  *
  */
-public class Order {
+public class OrderBackup {
 
-	public Order(BigDecimal value) {
+	public OrderBackup(BigDecimal value) {
 		super();
 		this.value = value;
 	}
