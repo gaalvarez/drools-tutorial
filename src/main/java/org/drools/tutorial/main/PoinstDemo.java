@@ -1,11 +1,13 @@
 package org.drools.tutorial.main;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.drools.tutorial.model.Item;
-import org.drools.tutorial.util.AgendaEventListenerGTM;
+import org.drools.tutorial.model.Person;
 import org.kie.api.KieServices;
 import org.kie.api.event.rule.DebugAgendaEventListener;
 import org.kie.api.runtime.KieContainer;
@@ -36,13 +38,25 @@ public class PoinstDemo {
 				kSession.insert(item);
 			}
 			final List<Long> points = new ArrayList<>();
-			//kSession.addEventListener( new AgendaEventListenerGTM() );
-			//kSession.addEventListener( new DebugAgendaEventListener() );
+//			kSession.addEventListener( new AgendaEventListenerGTM() );
+			kSession.addEventListener( new DebugAgendaEventListener() );
 			kSession.setGlobal("points", points);
 			kSession.getAgenda().getAgendaGroup("init-sum").setFocus();
 			kSession.fireAllRules();
+			final Long totalPuntos = points.stream().mapToLong(p -> p).sum();
+			System.out.println("Total de puntos: " + totalPuntos);
+			
+			String pattern = "MM-dd-yyyy";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			Date date = simpleDateFormat.parse("12-01-2018");
+			
+			final Person person = new Person(1L, totalPuntos, date);
+			kSession.insert(person);
+			kSession.fireAllRules();
+			
+			
+
 			kSession.dispose();
-			System.out.println("Total de puntos: " + points.stream().mapToLong(p -> p).sum());
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}

@@ -3,6 +3,7 @@ package org.drools.tutorial.rules
 
 //list any import classes here.
 import org.drools.tutorial.model.Item;
+import org.drools.tutorial.model.Person;
 //import org.drools.tutorial.model.Order;
 import java.math.BigDecimal;
 
@@ -19,11 +20,11 @@ rule "sum order"
     agenda-group "init-sum"
     when
     	not Order()
-        $total: Double() from 
+        $total: BigDecimal() from 
         	accumulate(Item($price: price, $amout: amount ), sum($price.multiply(new BigDecimal($amout))))
     then
 		System.out.println("precio total de la compra: " + $total);
-		insert(new Order(new BigDecimal($total)));
+		insert(new Order($total));
 end
 
 rule "calcular impuesto"
@@ -41,6 +42,7 @@ end
 
 rule "points by amount"
     //include attributes such as "salience" here...
+    auto-focus true
     when
         Item($amount: amount >= 20L)
     then
@@ -57,9 +59,31 @@ rule "points by price order"
 end
 
 rule "points by price item"
+    auto-focus true
     when
         Item( price >= 500000L, $amount: amount )
     then
 		System.out.println("puntos por precio item: " + 10L*$amount);
 		points.add(10L*$amount);
 end
+
+rule "miles by points"
+	no-loop true
+    when
+        $person: Person($points : points)
+    then
+    	System.out.println("Millas por puntos: " + $points);
+    	modify ($person) {
+    		setMiles($points)
+    	}
+end
+
+rule "verify date registry"
+    when
+        $person: Person(miles > 0)
+        //validar fecha de registro
+    then
+		System.out.println("Persona con millas: " + $person.getMiles());
+end
+
+

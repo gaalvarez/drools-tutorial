@@ -10,9 +10,19 @@ import java.util.Date;
  *
  */
 public class Person {
+
 	private Long id;
 	private Long points;
 	private Date registrationDate;
+	private Long miles;
+
+	public Person(Long id, Long points, Date registrationDate) {
+		super();
+		this.id = id;
+		this.points = points;
+		this.registrationDate = registrationDate;
+		this.miles = 0L;
+	}
 
 	public Long getId() {
 		return id;
@@ -36,6 +46,14 @@ public class Person {
 
 	public void setRegistrationDate(Date registrationDate) {
 		this.registrationDate = registrationDate;
+	}
+
+	public Long getMiles() {
+		return miles;
+	}
+
+	public void setMiles(Long miles) {
+		this.miles = miles;
 	}
 
 }
