@@ -13,8 +13,8 @@ public class Person {
 
 	private Long id;
 	private Long points;
-	private Date registrationDate;
 	private Long miles;
+	private Date registrationDate;
 
 	public Person(Long id, Long points, Date registrationDate) {
 		super();

@@ -15,6 +15,10 @@ declare Order
   tieneImpuesto: boolean
 end
 
+declare PersonaValida
+  person : Person
+end
+
 rule "calcular total compra"
     //include attributes such as "salience" here...
     when
@@ -62,6 +66,23 @@ rule "puntos por valor de item"
     then
 		System.out.println("puntos por precio item: " + 10L*$amount);
 		points.add(10L*$amount);
+end
+
+rule "validar antiguedad"
+	when
+		$persona: Person()
+		//aquí arriba poner la validación de la fecha para la persona
+	then
+		insert(new PersonaValida($persona));
+end
+
+rule "cambio a millas"
+	when
+		PersonaValida($puntos: person.points, $persona: person)
+	then
+		modify ($persona) {
+			setMiles((new Double($puntos * 0.4)).longValue())
+		}
 end
 
 

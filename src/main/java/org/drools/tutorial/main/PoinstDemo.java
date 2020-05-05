@@ -54,6 +54,18 @@ public class PoinstDemo {
 			final Long totalPuntos = points.stream().mapToLong(p -> p).sum();
 			System.out.println("Total de puntos: " + totalPuntos);
 			
+			String pattern = "MM-dd-yyyy";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			Date date = simpleDateFormat.parse("12-01-2018");
+			
+			final Person gustavo = new Person(1L, totalPuntos, date);
+			
+			kSession.insert(gustavo);
+			
+			kSession.fireAllRules();
+			
+			System.out.println("Millas a redimir: " + gustavo.getMiles());
+			
 			
 
 			kSession.dispose();
