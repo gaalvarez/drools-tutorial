@@ -26,6 +26,14 @@ public class PoinstDemo {
 			KieSession kSession = kContainer.newKieSession("ksession-points");
 
 			// go !
+			
+			/*1.020.000
+			 * total compra: 102
+			 * puntos por cada 20 items: 5
+			 * puntos por valor > 500000: 10
+			 * 
+			 * 
+			 * */
 			List<Item> items = new ArrayList<Item>() {
 				private static final long serialVersionUID = -1853656857123072351L;
 				{
@@ -39,20 +47,12 @@ public class PoinstDemo {
 			}
 			final List<Long> points = new ArrayList<>();
 //			kSession.addEventListener( new AgendaEventListenerGTM() );
-			kSession.addEventListener( new DebugAgendaEventListener() );
+//			kSession.addEventListener( new DebugAgendaEventListener() );
 			kSession.setGlobal("points", points);
-			kSession.getAgenda().getAgendaGroup("init-sum").setFocus();
+//			kSession.getAgenda().getAgendaGroup("init-sum").setFocus();
 			kSession.fireAllRules();
 			final Long totalPuntos = points.stream().mapToLong(p -> p).sum();
 			System.out.println("Total de puntos: " + totalPuntos);
-			
-			String pattern = "MM-dd-yyyy";
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-			Date date = simpleDateFormat.parse("12-01-2018");
-			
-			final Person person = new Person(1L, totalPuntos, date);
-			kSession.insert(person);
-			kSession.fireAllRules();
 			
 			
 

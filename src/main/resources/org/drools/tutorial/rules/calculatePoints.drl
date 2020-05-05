@@ -15,9 +15,8 @@ declare Order
   tieneImpuesto: boolean
 end
 
-rule "sum order"
+rule "calcular total compra"
     //include attributes such as "salience" here...
-    agenda-group "init-sum"
     when
     	not Order()
         $total: BigDecimal() from 
@@ -29,10 +28,8 @@ end
 
 rule "calcular impuesto"
     //include attributes such as "salience" here...
-    agenda-group "init-sum"
-    no-loop true
     when
-        $order: Order()
+        $order: Order(tieneImpuesto == false)
     then
 		$order.setValue($order.getValue().multiply(new BigDecimal("1.19")));
 		System.out.println("precio con impuesto: " + $order.getValue());
@@ -40,9 +37,9 @@ rule "calcular impuesto"
 		update($order);
 end
 
-rule "points by amount"
+rule "calcular puntos por cantidad"
+	auto-focus true
     //include attributes such as "salience" here...
-    auto-focus true
     when
         Item($amount: amount >= 20L)
     then
@@ -50,7 +47,7 @@ rule "points by amount"
 		points.add(5L*($amount/20L));
 end
 
-rule "points by price order"
+rule "calculo puntos por valor compra"
     when
         Order( $value: value, tieneImpuesto == true)
     then
@@ -58,32 +55,13 @@ rule "points by price order"
         points.add($value.divide(new BigDecimal("10000")).longValue());
 end
 
-rule "points by price item"
-    auto-focus true
+rule "puntos por valor de item"
+	auto-focus true
     when
         Item( price >= 500000L, $amount: amount )
     then
 		System.out.println("puntos por precio item: " + 10L*$amount);
 		points.add(10L*$amount);
-end
-
-rule "miles by points"
-	no-loop true
-    when
-        $person: Person($points : points)
-    then
-    	System.out.println("Millas por puntos: " + $points);
-    	modify ($person) {
-    		setMiles($points)
-    	}
-end
-
-rule "verify date registry"
-    when
-        $person: Person(miles > 0)
-        //validar fecha de registro
-    then
-		System.out.println("Persona con millas: " + $person.getMiles());
 end
 
 

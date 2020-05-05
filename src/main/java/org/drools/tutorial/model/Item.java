@@ -10,6 +10,11 @@ import java.math.BigDecimal;
  *
  */
 public class Item {
+
+	private BigDecimal price;
+	private Long amount;
+	private Item.Type type;
+	
 	public enum Type {
 		TECHNOLOGY, CLOTHES, HOME, MEATS
 	}
@@ -20,10 +25,6 @@ public class Item {
 		this.amount = amount;
 		this.type = type;
 	}
-
-	private BigDecimal price;
-	private Long amount;
-	private Item.Type type;
 
 	public Item.Type getType() {
 		return type;
